@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using VkAudioSync.Views;
@@ -8,11 +8,15 @@ using VkAudioSync.Views;
 namespace VkAudioSync
 {
     /// <summary>
-    /// Логика взаимодействия для App.xaml
+    ///     Логика взаимодействия для App.xaml
     /// </summary>
     public partial class App : Application
     {
         private InitWindow mainWindow;
+
+        private Dictionary<string, string> VkCookies { get; set; } = new Dictionary<string, string>();
+        private string Uid { get; set; }
+
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             mainWindow = new InitWindow();
@@ -33,46 +37,36 @@ namespace VkAudioSync
 
             if (string.IsNullOrEmpty(sid) || string.IsNullOrEmpty(uid))
             {
-                mainWindow.synchronizationContext.Post(o =>
-                {
-                    mainWindow.Content = new VkPage();
-                }, null);
-
-                await Task.Delay(3000);
+                mainWindow.synchronizationContext.Post(o => { mainWindow.Content = new VkPage(); }, null);
+                
                 while (true)
                 {
-                    var cookie = new CookieGetter().GetVkCookie();
-                    if (cookie.ContainsKey("remixsid"))
+                    mainWindow.synchronizationContext.Post(o =>
+                    {
+                        var vkPage = (VkPage) mainWindow.Content;
+                        VkCookies = vkPage?.GetTryGetCookie();
+                        Uid = vkPage?.GetGetVkUid();
+                    }, null);
+
+                    var cookie = VkCookies;
+                    if (cookie != null && cookie.ContainsKey("remixsid") && !string.IsNullOrEmpty(Uid) && Uid.All(i => i >= '0' && i <= '9'))
                     {
                         SettingsManager.SetSid(cookie["remixsid"]);
+                        SettingsManager.SetUid(Uid);
 
                         mainWindow.synchronizationContext.Post(o =>
                         {
-                            var vkPage = (VkPage)mainWindow.Content;
-                            var content = vkPage.GetContent;
-                            /*if (string.IsNullOrEmpty(content))
-                            {
-                                Thread.Sleep(1000);
-                                continue;
-                            }*/
-                            uid = new Regex("al_u[\\d]{1,20}").Match(content).ToString().Replace("al_u", "");
-                            if (!string.IsNullOrEmpty(uid) && uid.All(i => i >= '0' && i <= '9'))
-                            {
-                                mainWindow.Content = new MusicLoaderPage();
-                            }
-                            
+                            mainWindow.Content = new MusicLoaderPage();
                         }, null);
                         break;
                     }
-                    await Task.Delay(1000);
+
+                    await Task.Delay(500);
                 }
             }
             else
             {
-                mainWindow.synchronizationContext.Post(o =>
-                {
-                    mainWindow.Content = new MusicLoaderPage();
-                }, null);
+                mainWindow.synchronizationContext.Post(o => { mainWindow.Content = new MusicLoaderPage(); }, null);
             }
         }
     }

@@ -47,5 +47,11 @@ namespace VkAudioSync
             _currentSettings.Sid = sid;
             UpdateFile();
         }
+        public static void SetUid(string uid)
+        {
+            CheckFile();
+            _currentSettings.Uid = uid;
+            UpdateFile();
+        }
     }
 }
