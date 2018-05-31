@@ -69,17 +69,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="IFileManager.cs" />
+    <Compile Include="JsonFileManager.cs" />
+    <Compile Include="SettingsRequisites.cs" />
+    <Compile Include="Views\DirExplorerPage.xaml.cs">
+      <DependentUpon>DirExplorerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VkAudioHelper.cs" />
     <Compile Include="Views\MusicLoaderPage.xaml.cs">
       <DependentUpon>MusicLoaderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VkPage.xaml.cs">
       <DependentUpon>VkPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VkSongModel.cs" />
     <Compile Include="Vk\VkAudioUnmasker.cs" />
     <Page Include="Views\InitWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DirExplorerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MusicLoaderPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -98,7 +109,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SettingsManager.cs" />
-    <Compile Include="SettingsModel.cs" />
     <Compile Include="Views\InitWindow.xaml.cs">
       <DependentUpon>InitWindow.xaml</DependentUpon>
     </Compile>

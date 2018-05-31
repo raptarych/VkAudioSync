@@ -13,7 +13,7 @@ namespace VkAudioSync.Vk
             {
                 using (var jsEngine = new MsieJsEngine())
                 {
-                    jsEngine.ExecuteResource("Sandbox.audioUnmask.js", Assembly.GetExecutingAssembly());
+                    jsEngine.ExecuteResource("VkAudioSync.Vk.audioUnmask.js", Assembly.GetExecutingAssembly());
                     return jsEngine.Evaluate<string>($"unmaskUrl(\"{maskedUrl}\", {userId});");
                 }
             }

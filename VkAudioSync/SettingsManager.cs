@@ -1,13 +1,14 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
 
 namespace VkAudioSync
 {
-    public class SettingsManager
+    public static class SettingsManager
     {
         private static readonly string SettingsFilename = ConfigurationManager.AppSettings["settingsFilename"];
-        private static SettingsModel _currentSettings;
+        private static Dictionary<SettingsRequisites, string> _currentSettings;
 
         private static void CheckFile()
         {
@@ -15,12 +16,12 @@ namespace VkAudioSync
             {
                 if (!File.Exists(SettingsFilename))
                 {
-                    _currentSettings = new SettingsModel();
+                    _currentSettings = new Dictionary<SettingsRequisites, string>();
                     File.WriteAllText(SettingsFilename, JsonConvert.SerializeObject(_currentSettings));
                 }
                 else
                 {
-                    _currentSettings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(SettingsFilename));
+                    _currentSettings = JsonConvert.DeserializeObject<Dictionary<SettingsRequisites, string>>(File.ReadAllText(SettingsFilename));
                 }
             }
             
@@ -31,26 +32,16 @@ namespace VkAudioSync
             File.WriteAllText(SettingsFilename, JsonConvert.SerializeObject(_currentSettings));
         }
 
-        public static string GetSid()
+        public static string Get(SettingsRequisites key)
         {
             CheckFile();
-            return _currentSettings.Sid;
+            return _currentSettings.TryGetValue(key, out var value) ? value : null;
         }
-        public static string GetUid()
+
+        public static void Set(SettingsRequisites key, string value)
         {
             CheckFile();
-            return _currentSettings.Uid;
-        }
-        public static void SetSid(string sid)
-        {
-            CheckFile();
-            _currentSettings.Sid = sid;
-            UpdateFile();
-        }
-        public static void SetUid(string uid)
-        {
-            CheckFile();
-            _currentSettings.Uid = uid;
+            _currentSettings[key] = value;
             UpdateFile();
         }
     }

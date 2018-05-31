@@ -32,8 +32,9 @@ namespace VkAudioSync
 
         private async Task InitApp()
         {
-            var sid = SettingsManager.GetSid();
-            var uid = SettingsManager.GetUid();
+            var sid = SettingsManager.Get(SettingsRequisites.Sid);
+            var uid = SettingsManager.Get(SettingsRequisites.Uid);
+            var dir = SettingsManager.Get(SettingsRequisites.Directory);
 
             if (string.IsNullOrEmpty(sid) || string.IsNullOrEmpty(uid))
             {
@@ -51,12 +52,16 @@ namespace VkAudioSync
                     var cookie = VkCookies;
                     if (cookie != null && cookie.ContainsKey("remixsid") && !string.IsNullOrEmpty(Uid) && Uid.All(i => i >= '0' && i <= '9'))
                     {
-                        SettingsManager.SetSid(cookie["remixsid"]);
-                        SettingsManager.SetUid(Uid);
+                        SettingsManager.Set(SettingsRequisites.Sid, cookie["remixsid"]);
+                        SettingsManager.Set(SettingsRequisites.Uid, Uid);
+                        dir = SettingsManager.Get(SettingsRequisites.Directory);
 
                         mainWindow.synchronizationContext.Post(o =>
                         {
-                            mainWindow.Content = new MusicLoaderPage();
+                            if (string.IsNullOrEmpty(dir))
+                                mainWindow.Content = new DirExplorerPage();
+                            else
+                                mainWindow.Content = new MusicLoaderPage();
                         }, null);
                         break;
                     }
@@ -66,7 +71,13 @@ namespace VkAudioSync
             }
             else
             {
-                mainWindow.synchronizationContext.Post(o => { mainWindow.Content = new MusicLoaderPage(); }, null);
+                mainWindow.synchronizationContext.Post(o =>
+                {
+                    if (string.IsNullOrEmpty(dir))
+                        mainWindow.Content = new DirExplorerPage();
+                    else
+                        mainWindow.Content = new MusicLoaderPage();
+                }, null);
             }
         }
     }

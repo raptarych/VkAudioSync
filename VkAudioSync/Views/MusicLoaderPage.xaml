@@ -8,6 +8,10 @@
       d:DesignHeight="430" d:DesignWidth="480"
       Background="AliceBlue"
       Title="MusicLoaderPage">
-    <Button Content="Загрузка всех аудиозаписей" HorizontalAlignment="Center" Margin="0,-300,0,0" VerticalAlignment="Center" Width="200" Height="50"/>
+    <Grid Margin="10,20,10,340">
+        <Button Content="Загрузка всех аудиозаписей" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="50" Click="Button_Click"/>
+        <Label Content="0 из 0" HorizontalAlignment="Left" Margin="371,0,0,0" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+    </Grid>
+    
 
 </Page>
