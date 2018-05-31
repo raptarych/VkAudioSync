@@ -6,7 +6,7 @@ using System.Windows.Controls;
 namespace VkAudioSync.Views
 {
     /// <summary>
-    /// Логика взаимодействия для DirExplorerPage.xaml
+    ///     Логика взаимодействия для DirExplorerPage.xaml
     /// </summary>
     public partial class DirExplorerPage : Page
     {
@@ -33,9 +33,9 @@ namespace VkAudioSync.Views
             }
         }
 
-        void folder_Expanded(object sender, RoutedEventArgs e)
+        private void folder_Expanded(object sender, RoutedEventArgs e)
         {
-            TreeViewItem item = (TreeViewItem)sender;
+            var item = (TreeViewItem) sender;
             if (item.Items.Count == 1 && item.Items[0] == dummyNode)
             {
                 item.Items.Clear();
@@ -54,11 +54,14 @@ namespace VkAudioSync.Views
                         item.Items.Add(subitem);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                }
             }
         }
 
-        private void DirectoryExplorerTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void DirectoryExplorerTreeView_SelectedItemChanged(object sender,
+            RoutedPropertyChangedEventArgs<object> e)
         {
             var item = (TreeViewItem) e.NewValue;
             PathLabel.Content = item.Tag;

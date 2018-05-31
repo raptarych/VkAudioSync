@@ -8,10 +8,11 @@
       d:DesignHeight="430" d:DesignWidth="480"
       Background="AliceBlue"
       Title="MusicLoaderPage">
-    <Grid Margin="10,20,10,340">
-        <Button Content="Загрузка всех аудиозаписей" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="50" Click="Button_Click"/>
-        <Label Content="0 из 0" HorizontalAlignment="Left" Margin="371,0,0,0" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+    <Grid Margin="10">
+        <Button Content="Обновить" HorizontalAlignment="Left" VerticalAlignment="Center" Width="79" Height="19" Click="Button_Click" Margin="371,10,0,381"/>
+        <Label Name="IdDownloaderLabel" Content="0 файлов" HorizontalAlignment="Right" Margin="0,7,108,377" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="0,7,108,377" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
-    
+
 
 </Page>
