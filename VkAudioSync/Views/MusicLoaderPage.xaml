@@ -10,8 +10,15 @@
       Title="MusicLoaderPage">
     <Grid Margin="10">
         <Button Content="Обновить" HorizontalAlignment="Left" VerticalAlignment="Center" Width="79" Height="19" Click="Button_Click" Margin="371,10,0,381"/>
-        <Label Name="IdDownloaderLabel" Content="0 файлов" HorizontalAlignment="Right" Margin="0,7,108,377" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="0,7,108,377" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Name="IdDownloaderLabel" Content="0 файлов" HorizontalAlignment="Right" Margin="0,7,108,377" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="0,7,108,377" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+
+        <Label Content="0 файлов" HorizontalAlignment="Right" Margin="0,33,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Скачано файлов" HorizontalAlignment="Left" Margin="0,33,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+
+        <Button Name="GetMp3Button" Content="Обновить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="79" Height="19" Click="Button_Click" Margin="371,67,0,0"/>
+        <Label Name="Mp3GetterLabel" Content="0 файлов" HorizontalAlignment="Right" Margin="0,63,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Скачивание аудиозаписей" HorizontalAlignment="Left" Margin="0,63,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
     </Grid>
 
 

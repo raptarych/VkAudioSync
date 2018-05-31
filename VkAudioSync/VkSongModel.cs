@@ -28,7 +28,7 @@ namespace VkAudioSync
         [JsonIgnore]
         public string FileName => $"{VkArtist} - {VkTitle}.mp3";
 
-        public void Unmask(int uid)
+        public void Unmask(string uid)
         {
             Url = VkAudioUnmasker.UnmaskFrom(Url, uid);
         }

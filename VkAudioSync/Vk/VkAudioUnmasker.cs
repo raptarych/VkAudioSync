@@ -7,7 +7,7 @@ namespace VkAudioSync.Vk
 {
     internal static class VkAudioUnmasker
     {
-        public static string UnmaskFrom(string maskedUrl, int userId)
+        public static string UnmaskFrom(string maskedUrl, string userId)
         {
             try
             {
