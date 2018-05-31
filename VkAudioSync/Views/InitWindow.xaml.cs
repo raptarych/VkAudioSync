@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 
 namespace VkAudioSync.Views
@@ -9,6 +10,14 @@ namespace VkAudioSync.Views
     public partial class InitWindow : Window
     {
         public readonly SynchronizationContext synchronizationContext;
+
+        public void RunSync(Action<InitWindow> act)
+        {
+            synchronizationContext.Post(o =>
+            {
+                act(this);
+            }, null);
+        }
         public InitWindow()
         {
             InitializeComponent();

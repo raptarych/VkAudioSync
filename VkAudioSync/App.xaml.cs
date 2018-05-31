@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using VkAudioSync.Views;
@@ -30,6 +30,14 @@ namespace VkAudioSync
             mainWindow.Show();
         }
 
+        public void RunSyncWithUi(Action<InitWindow> act)
+        {
+            mainWindow.synchronizationContext.Post(o =>
+            {
+                act(mainWindow);
+            }, null);
+        }
+
         private async Task InitApp()
         {
             var sid = SettingsManager.Get(SettingsRequisites.Sid);
@@ -38,16 +46,19 @@ namespace VkAudioSync
 
             if (string.IsNullOrEmpty(sid) || string.IsNullOrEmpty(uid))
             {
-                mainWindow.synchronizationContext.Post(o => { mainWindow.Content = new VkPage(); }, null);
+                RunSyncWithUi(o =>
+                {
+                    o.Content = new VkPage();
+                });
                 
                 while (true)
                 {
-                    mainWindow.synchronizationContext.Post(o =>
+                    RunSyncWithUi(o =>
                     {
-                        var vkPage = (VkPage) mainWindow.Content;
+                        var vkPage = (VkPage) o.Content;
                         VkCookies = vkPage?.GetTryGetCookie();
                         Uid = vkPage?.GetGetVkUid();
-                    }, null);
+                    });
 
                     var cookie = VkCookies;
                     if (cookie != null && cookie.ContainsKey("remixsid") && !string.IsNullOrEmpty(Uid) && Uid.All(i => i >= '0' && i <= '9'))
@@ -56,13 +67,13 @@ namespace VkAudioSync
                         SettingsManager.Set(SettingsRequisites.Uid, Uid);
                         dir = SettingsManager.Get(SettingsRequisites.Directory);
 
-                        mainWindow.synchronizationContext.Post(o =>
+                        RunSyncWithUi(o =>
                         {
                             if (string.IsNullOrEmpty(dir))
-                                mainWindow.Content = new DirExplorerPage();
+                                o.Content = new DirExplorerPage();
                             else
-                                mainWindow.Content = new MusicLoaderPage();
-                        }, null);
+                                o.Content = new MusicLoaderPage();
+                        });
                         break;
                     }
 
@@ -71,14 +82,24 @@ namespace VkAudioSync
             }
             else
             {
-                mainWindow.synchronizationContext.Post(o =>
+                RunSyncWithUi(o =>
                 {
                     if (string.IsNullOrEmpty(dir))
                         mainWindow.Content = new DirExplorerPage();
                     else
                         mainWindow.Content = new MusicLoaderPage();
-                }, null);
+                });
             }
+        }
+
+        public void RunSyncWithPageUi(Action<MusicLoaderPage> act)
+        {
+            var page = (MusicLoaderPage) mainWindow.Content;
+            if (page == null) return;
+            mainWindow.synchronizationContext.Post(o =>
+            {
+                act(page);
+            }, null);
         }
     }
 }

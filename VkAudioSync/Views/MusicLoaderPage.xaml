@@ -2,23 +2,27 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:VkAudioSync.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d" 
       d:DesignHeight="430" d:DesignWidth="480"
       Background="AliceBlue"
       Title="MusicLoaderPage">
     <Grid Margin="10">
-        <Button Content="Обновить" HorizontalAlignment="Left" VerticalAlignment="Center" Width="79" Height="19" Click="Button_Click" Margin="371,10,0,381"/>
-        <Label Name="IdDownloaderLabel" Content="0 файлов" HorizontalAlignment="Right" Margin="0,7,108,377" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="0,7,108,377" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button Content="Обновить" HorizontalAlignment="Right" VerticalAlignment="Top" Width="79" Height="113" Click="Button_Click" Margin="0,0,10,10"/>
+        <Label Name="LbIdDownloader" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,0,108,377" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="0,0,108,377" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
 
-        <Label Content="0 файлов" HorizontalAlignment="Right" Margin="0,33,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Content="Скачано файлов" HorizontalAlignment="Left" Margin="0,33,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Проиндексировано файлов" HorizontalAlignment="Left" Margin="0,30,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Name="LbIndexed" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,30,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
 
-        <Button Name="GetMp3Button" Content="Обновить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="79" Height="19" Click="Button_Click" Margin="371,67,0,0"/>
-        <Label Name="Mp3GetterLabel" Content="0 файлов" HorizontalAlignment="Right" Margin="0,63,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Content="Скачивание аудиозаписей" HorizontalAlignment="Left" Margin="0,63,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Аудиозаписей к скачке" HorizontalAlignment="Left" Margin="0,60,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Name="LbToDownload" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,60,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+
+        <Label Content="Аудиозаписей к удалению" HorizontalAlignment="Left" Margin="0,90,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Name="LbToDelete" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,90,108,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button Content="Начать синхронизацию" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="214" Height="49" Click="Button_Click_1"/>
+        <Button Content="Остановить синхронизацию" HorizontalAlignment="Left" Margin="236,161,0,0" VerticalAlignment="Top" Width="214" Height="49"/>
+        <Label Name="LbProgress" Content="" HorizontalAlignment="Left" Margin="10,215,0,0" VerticalAlignment="Top" Width="440"/>
     </Grid>
 
 

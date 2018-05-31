@@ -72,16 +72,19 @@
     <Compile Include="IFileManager.cs" />
     <Compile Include="JsonFileManager.cs" />
     <Compile Include="SettingsRequisites.cs" />
+    <Compile Include="SongsFIleSynchronizer.cs" />
+    <Compile Include="UiSynchronizer.cs" />
     <Compile Include="Views\DirExplorerPage.xaml.cs">
       <DependentUpon>DirExplorerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VkAudioHelper.cs" />
     <Compile Include="Views\MusicLoaderPage.xaml.cs">
       <DependentUpon>MusicLoaderPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Views\VkPage.xaml.cs">
       <DependentUpon>VkPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VkDownloadService.cs" />
     <Compile Include="VkSongModel.cs" />
     <Compile Include="Vk\VkAudioUnmasker.cs" />
     <Page Include="Views\InitWindow.xaml">
@@ -144,7 +147,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Vk\audioUnmask.js" />
+    <EmbeddedResource Include="Vk\audioUnmask.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
