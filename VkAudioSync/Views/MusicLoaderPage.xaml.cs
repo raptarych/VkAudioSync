@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace VkAudioSync.Views
 {
@@ -17,16 +19,24 @@ namespace VkAudioSync.Views
             var idsDownload = new JsonFileManager().ReadFile<List<VkSongModel>>(pathName);
             LbIdDownloader.Content = $"{idsDownload?.Count ?? 0} файлов";
 
-            SyncLabels(idsDownload);
+            SyncLabels();
         }
 
-        private void SyncLabels(List<VkSongModel> idsDownload)
+        public void SyncLabels()
         {
-            if (idsDownload == null) return;
+            var pathName = Path.Combine(SettingsManager.Get(SettingsRequisites.Directory), ".playlist");
+            var idsDownload = new JsonFileManager().ReadFile<List<VkSongModel>>(pathName);
+            if (idsDownload == null) return; 
             var sync = new SongsFileSynchronizer();
             LbIndexed.Content = $"{sync.GetSongsIntersect(idsDownload)} файлов";
-            LbToDownload.Content = $"{sync.SongsToDownloadCount(idsDownload)} файлов";
-            LbToDelete.Content = $"{sync.GetSongsToDelete(idsDownload)} файлов";
+
+            var countToDownload = sync.SongsToDownloadCount(idsDownload);
+            LbToDownload.Content = $"+ {countToDownload} файлов";
+            if (countToDownload > 0) LbToDownload.Foreground = new SolidColorBrush(Colors.Green);
+
+            var countToDelete = sync.SongsToDeleteCount(idsDownload);
+            LbToDelete.Content = $"- {countToDelete} файлов";
+            if (countToDelete > 0) LbToDelete.Foreground = new SolidColorBrush(Colors.Red);
         }
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -45,14 +55,17 @@ namespace VkAudioSync.Views
                 UiSynchronizer.Run(window =>
                 {
                     LbIdDownloader.Content = $"{audioPlaylist.Count} файлов";
-                    SyncLabels(audioPlaylist);
+                    SyncLabels();
                 });
             });
 
         }
 
-        private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+        public bool MarkerToStopDownload { get; private set; }
+
+        private void StartDownloadOnClick(object sender, System.Windows.RoutedEventArgs e)
         {
+            MarkerToStopDownload = false;
             Task.Run(async () =>
             {
                 var vkService = new VkDownloadService();
@@ -61,8 +74,13 @@ namespace VkAudioSync.Views
 
                 audioPlaylist = new SongsFileSynchronizer().GetSongsToDownload(audioPlaylist);
 
-                await vkService.DownloadSongs(audioPlaylist);
+                await vkService.DeleteAndDownload(audioPlaylist, new SongsFileSynchronizer().GetSongsToDelete(audioPlaylist));
             });
+        }
+
+        private void StopDownloadOnClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            MarkerToStopDownload = true;
         }
     }
 }

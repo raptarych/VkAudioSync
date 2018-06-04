@@ -38,6 +38,14 @@ namespace VkAudioSync
             }, null);
         }
 
+        public void RunSyncWithUi<T>(Action<InitWindow, T> act, T data)
+        {
+            mainWindow.synchronizationContext.Post(o =>
+            {
+                act(mainWindow, (T) o);
+            }, data);
+        }
+
         private async Task InitApp()
         {
             var sid = SettingsManager.Get(SettingsRequisites.Sid);

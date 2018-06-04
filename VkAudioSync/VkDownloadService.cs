@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
+using VkAudioSync.Views;
 
 namespace VkAudioSync
 {
@@ -32,36 +34,85 @@ namespace VkAudioSync
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
 
             request.AddCookie("remixsid", Sid);
-
+            
             var response = client.Execute(request);
-            var content = response.Content;
+            var encoding = Encoding.GetEncoding("Windows-1251");
+            var content = encoding.GetString(response.RawBytes);
             var jsonContent = new Regex("\\[\\[.+\\]\\]").Match(content).Value;
             var data = JsonConvert.DeserializeObject<List<object[]>>(jsonContent)
                 .Select(VkSongModel.FromJson)
                 .ToList();
             data.ForEach(x => x.Unmask(Uid));
 
+            var abortSignal = false;
             foreach (var vkSongModel in data)
             {
+                if (abortSignal)
+                {
+                    UiSynchronizer.Run(o =>
+                    {
+                        var page = (MusicLoaderPage)o.Content;
+                        if (page == null) return;
+                        page.LbProgress.Content = string.Empty;
+                        page.ProgressBar.Value = 0;
+                        abortSignal = page.MarkerToStopDownload;
+                    });
+                    throw new AbortedException("Canceled by user");
+                }
                 var webClient = new WebClient();
                 var filePath = Path.Combine(Directory, vkSongModel.FileName);
                 webClient.DownloadProgressChanged += (sender, args) =>
                 {
-                    UiSynchronizer.RunOnPage(o =>
+                    var msg = $"Скачивание {vkSongModel.FileName}";
+                    UiSynchronizer.Run((o, d) =>
                     {
-                        o.LbProgress.Content = $"Скачивание {vkSongModel.FileName}: {args.TotalBytesToReceive / args.BytesReceived * 100}%";
-                    });
+                        var page = (MusicLoaderPage) o.Content;
+                        if (page == null) return;
+                        page.LbProgress.Content = d;
+                        page.ProgressBar.Value = args.ProgressPercentage;
+                        abortSignal = page.MarkerToStopDownload;
+                    }, msg);
                 };
                 await webClient.DownloadFileTaskAsync(vkSongModel.Url, filePath);
+                UiSynchronizer.Run(o =>
+                {
+                    var page = (MusicLoaderPage)o.Content;
+                    if (page == null) return;
+                    page.SyncLabels();
+                    abortSignal = page.MarkerToStopDownload;
+                });
             }
         }
 
-        public async Task DownloadSongs(List<VkSongModel> songsData)
+        public async Task DeleteAndDownload(List<VkSongModel> toDownload, List<string> toDelete)
         {
-            for (var i = 0; i <= songsData.Count / BatchSize; i++)
+            UiSynchronizer.Run(o =>
             {
-                await DownloadBatch(songsData.Skip(i * BatchSize).Take(BatchSize));
+                var page = (MusicLoaderPage)o.Content;
+                if (page == null) return;
+                page.LbProgress.Content = "Удаление удаленных песен...";
+            });
+            var dir = SettingsManager.Get(SettingsRequisites.Directory);
+            foreach (var fileName in toDelete)
+            {
+                File.Delete(Path.Combine(dir, fileName));
             }
+
+            await DownloadSongs(toDownload);
+
+        }
+
+        private async Task DownloadSongs(List<VkSongModel> songsData)
+        {
+            try
+            {
+                for (var i = 0; i <= songsData.Count / BatchSize; i++)
+                {
+                    await DownloadBatch(songsData.Skip(i * BatchSize).Take(BatchSize));
+                }
+            }
+            catch (AbortedException)
+            {}
         }
 
         public async Task<List<VkSongModel>> GetUsersPlaylist(string uid, string sid)
@@ -97,6 +148,13 @@ namespace VkAudioSync
                 .Select(VkSongModel.FromJson)
                 .ToList();
             return data;
+        }
+    }
+
+    internal class AbortedException : Exception
+    {
+        public AbortedException(string canceledByUser) : base(canceledByUser)
+        {
         }
     }
 }

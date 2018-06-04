@@ -19,11 +19,8 @@ namespace VkAudioSync
         public T ReadFile<T>(string filePath) where T: class
         {
             if (!File.Exists(filePath)) return null;
-            using (var file = File.OpenText(filePath))
-            {
-                var serializer = new JsonSerializer();
-                return (T) serializer.Deserialize(file, typeof(T));
-            }
+            var fileData = File.ReadAllText(filePath);
+            return JsonConvert.DeserializeObject<T>(fileData);
         }
     }
 }

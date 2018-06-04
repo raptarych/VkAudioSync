@@ -9,13 +9,13 @@ namespace VkAudioSync
         public static void Run(Action<InitWindow> act)
         {
             var appInstance = (App) Application.Current;
-            appInstance.RunSyncWithUi(act);
+            appInstance?.RunSyncWithUi(act);
         }
 
-        public static void RunOnPage(Action<MusicLoaderPage> act)
+        public static void Run<T>(Action<InitWindow, T> act, T data)
         {
             var appInstance = (App)Application.Current;
-            appInstance.RunSyncWithPageUi(act);
+            appInstance?.RunSyncWithUi(act, data);
         }
     }
 }

@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VkAudioSync.Views"
         mc:Ignorable="d"
-        Title="VK AudioSync" Height="512" Width="512">
+        Title="VK AudioSync" Height="512" Width="512"
+        ResizeMode="NoResize">
     <Frame Source="LoadPage.xaml"  HorizontalAlignment="Left" Height="430" Margin="10,10,0,0" VerticalAlignment="Top" Width="480"/>
 
 </Window>

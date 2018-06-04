@@ -31,11 +31,16 @@ namespace VkAudioSync
             return vkSongs.Where(i => hash.Contains(i.FileName)).ToList();
         }
 
-        public int GetSongsToDelete(List<VkSongModel> vkSongs)
+        public List<string> GetSongsToDelete(List<VkSongModel> vkSongs)
         {
             var hash = new HashSet<string>(GetMp3FileList());
             hash.ExceptWith(vkSongs.Select(i => i.FileName));
-            return hash.Count;
+            return hash.ToList();
+        }
+
+        public int SongsToDeleteCount(List<VkSongModel> vkSongs)
+        {
+            return GetSongsToDelete(vkSongs).Count;
         }
     }
 }
