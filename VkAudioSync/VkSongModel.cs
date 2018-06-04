@@ -13,9 +13,12 @@ namespace VkAudioSync
                 OwnerId = model[1].ToString(),
                 Url = model[2].ToString(),
                 VkTitle = model[3].ToString(),
-                VkArtist = model[4].ToString()
+                VkArtist = model[4].ToString(),
+                Claimed = model[12].ToString() != "[]"
             };
         }
+
+        public bool Claimed { get; set; }
         public string SongId { get; set; }
         public string OwnerId { get; set; }
         [JsonIgnore]

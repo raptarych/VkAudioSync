@@ -22,23 +22,42 @@ namespace VkAudioSync
         private async Task DownloadBatch(IEnumerable<VkSongModel> batch)
         {
             batch = batch.Take(BatchSize).ToList();
+            if (!batch.Any()) return;
+            var jsonContent = "";
+            var trying = 0;
+            while (string.IsNullOrEmpty(jsonContent))
+            {
+                var client = new RestClient("https://vk.com");
+                var request = new RestRequest("al_audio.php", Method.POST);
+                request.AddParameter("act", "reload_audio");
+                request.AddParameter("al", 1);
+                request.AddParameter("ids", string.Join(",", batch.Skip(1).Select(i => i.UniqueId)));
 
-            var client = new RestClient("https://vk.com");
-            var request = new RestRequest("al_audio.php", Method.POST);
-            request.AddParameter("act", "reload_audio");
-            request.AddParameter("al", 1);
-            request.AddParameter("ids", string.Join(",", batch.Select(i => i.UniqueId)));
+                request.AddHeader("origin", "https://vk.com");
+                request.AddHeader("referer", $"https://vk.com/audios{Uid}");
+                request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
 
-            request.AddHeader("origin", "https://vk.com");
-            request.AddHeader("referer", $"https://vk.com/audios{Uid}");
-            request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+                request.AddCookie("remixsid", Sid);
 
-            request.AddCookie("remixsid", Sid);
-            
-            var response = client.Execute(request);
-            var encoding = Encoding.GetEncoding("Windows-1251");
-            var content = encoding.GetString(response.RawBytes);
-            var jsonContent = new Regex("\\[\\[.+\\]\\]").Match(content).Value;
+                var response = client.Execute(request);
+                var encoding = Encoding.GetEncoding("Windows-1251");
+                var content = encoding.GetString(response.RawBytes);
+                jsonContent = new Regex("\\[\\[.+\\]\\]").Match(content).Value;
+                if (string.IsNullOrEmpty(jsonContent))
+                {
+                    trying++;
+                    if (trying > 5) return;
+                    var msg = $"Кажется VK перестал отдавать треки из-за таймаута ({trying}) :( надо подождать 10 сек";
+                    UiSynchronizer.Run((o, d) =>
+                    {
+                        var page = (MusicLoaderPage)o.Content;
+                        if (page == null) return;
+                        page.LbProgress.Content = d;
+                    }, msg);
+                    await Task.Delay(1000);
+                }
+            }
+           
             var data = JsonConvert.DeserializeObject<List<object[]>>(jsonContent)
                 .Select(VkSongModel.FromJson)
                 .ToList();
@@ -99,7 +118,13 @@ namespace VkAudioSync
             }
 
             await DownloadSongs(toDownload);
-
+            UiSynchronizer.Run(o =>
+            {
+                var page = (MusicLoaderPage)o.Content;
+                page.LbProgress.Content = "Готово";
+                if (page == null) return;
+                page.SyncLabels();
+            });
         }
 
         private async Task DownloadSongs(List<VkSongModel> songsData)

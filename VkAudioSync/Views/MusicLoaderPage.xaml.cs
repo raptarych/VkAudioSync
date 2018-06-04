@@ -72,9 +72,9 @@ namespace VkAudioSync.Views
                 var pathName = Path.Combine(SettingsManager.Get(SettingsRequisites.Directory), ".playlist");
                 var audioPlaylist = new JsonFileManager().ReadFile<List<VkSongModel>>(pathName);
 
-                audioPlaylist = new SongsFileSynchronizer().GetSongsToDownload(audioPlaylist);
+                var audioToDownload = new SongsFileSynchronizer().GetSongsToDownload(audioPlaylist);
 
-                await vkService.DeleteAndDownload(audioPlaylist, new SongsFileSynchronizer().GetSongsToDelete(audioPlaylist));
+                await vkService.DeleteAndDownload(audioToDownload, new SongsFileSynchronizer().GetSongsToDelete(audioPlaylist));
             });
         }
 

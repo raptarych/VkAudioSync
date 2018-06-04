@@ -26,7 +26,7 @@ namespace VkAudioSync
 
         public List<VkSongModel> GetSongsToDownload(List<VkSongModel> vkSongs)
         {
-            var hash = new HashSet<string>(vkSongs.Select(i => i.FileName));
+            var hash = new HashSet<string>(vkSongs.Where(i => !i.Claimed).Select(i => i.FileName));
             hash.ExceptWith(GetMp3FileList());
             return vkSongs.Where(i => hash.Contains(i.FileName)).ToList();
         }
