@@ -8,22 +8,25 @@
       Background="AliceBlue"
       Title="MusicLoaderPage">
     <Grid Margin="10">
-        <Button Content="Обновить" HorizontalAlignment="Right" VerticalAlignment="Top" Width="79" Height="113" Click="Button_Click" Margin="0,7,6,0"/>
-        <Label Name="LbIdDownloader" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,7,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="4,7,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button Name="BtRefresh" Content="Обновить" HorizontalAlignment="Right" VerticalAlignment="Top" Width="79" Height="113" Click="Button_Click" Margin="0,55,6,0"/>
+        <Label Name="LbIdDownloader" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,55,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Получение Id аудиозаписей" HorizontalAlignment="Left" Margin="5,55,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
 
-        <Label Content="Проиндексировано файлов" HorizontalAlignment="Left" Margin="4,37,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Name="LbIndexed" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,37,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Проиндексировано файлов" HorizontalAlignment="Left" Margin="5,85,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Name="LbIndexed" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,85,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
 
-        <Label Content="Аудиозаписей к скачке" HorizontalAlignment="Left" Margin="4,67,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Name="LbToDownload" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,67,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Аудиозаписей к скачке" HorizontalAlignment="Left" Margin="5,115,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Name="LbToDownload" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,115,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
 
-        <Label Content="Аудиозаписей к удалению" HorizontalAlignment="Left" Margin="4,97,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label Name="LbToDelete" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,97,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Button Content="Начать синхронизацию" HorizontalAlignment="Left" Margin="10,305,0,0" VerticalAlignment="Top" Width="214" Height="49" Click="StartDownloadOnClick"/>
-        <Button Content="Остановить синхронизацию" HorizontalAlignment="Left" Margin="236,305,0,0" VerticalAlignment="Top" Width="214" Height="49" Click="StopDownloadOnClick"/>
-        <Label Name="LbProgress" Content="" HorizontalAlignment="Left" Margin="10,359,0,0" VerticalAlignment="Top" Width="440"/>
-        <ProgressBar Name="ProgressBar" HorizontalAlignment="Left" Height="15" Margin="10,385,0,0" VerticalAlignment="Top" Width="440"/>
+        <Label Content="Аудиозаписей к удалению" HorizontalAlignment="Left" Margin="5,145,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Name="LbToDelete" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,145,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button Content="Начать синхронизацию" HorizontalAlignment="Left" Margin="10,0,0,56" VerticalAlignment="Bottom" Width="214" Height="49" Click="StartDownloadOnClick"/>
+        <Button Content="Остановить синхронизацию" HorizontalAlignment="Right" Margin="0,0,10,56" VerticalAlignment="Bottom" Width="214" Height="49" Click="StopDownloadOnClick"/>
+        <Label Name="LbProgress" Content="" HorizontalAlignment="Left" Margin="10,0,0,25" VerticalAlignment="Bottom" Width="440"/>
+        <ProgressBar Name="ProgressBar" HorizontalAlignment="Left" Height="15" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="440"/>
+        <Label Content="Каталог:" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+        <Label Name="LbDirectory" Content="" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top"/>
+        <Button Name="BtDirectory" Content="Обзор..." HorizontalAlignment="Right" Margin="0,24,6,0" VerticalAlignment="Top" Width="79" RenderTransformOrigin="0.29,0.609" Click="BtDirectory_Click"/>
     </Grid>
 
 

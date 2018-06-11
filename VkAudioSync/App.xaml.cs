@@ -50,7 +50,6 @@ namespace VkAudioSync
         {
             var sid = SettingsManager.Get(SettingsRequisites.Sid);
             var uid = SettingsManager.Get(SettingsRequisites.Uid);
-            var dir = SettingsManager.Get(SettingsRequisites.Directory);
 
             if (string.IsNullOrEmpty(sid) || string.IsNullOrEmpty(uid))
             {
@@ -73,14 +72,10 @@ namespace VkAudioSync
                     {
                         SettingsManager.Set(SettingsRequisites.Sid, cookie["remixsid"]);
                         SettingsManager.Set(SettingsRequisites.Uid, Uid);
-                        dir = SettingsManager.Get(SettingsRequisites.Directory);
 
                         RunSyncWithUi(o =>
                         {
-                            if (string.IsNullOrEmpty(dir))
-                                o.Content = new DirExplorerPage();
-                            else
-                                o.Content = new MusicLoaderPage();
+                            mainWindow.Content = new MusicLoaderPage();
                         });
                         break;
                     }
@@ -92,10 +87,7 @@ namespace VkAudioSync
             {
                 RunSyncWithUi(o =>
                 {
-                    if (string.IsNullOrEmpty(dir))
-                        mainWindow.Content = new DirExplorerPage();
-                    else
-                        mainWindow.Content = new MusicLoaderPage();
+                    mainWindow.Content = new MusicLoaderPage();
                 });
             }
         }

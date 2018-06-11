@@ -51,6 +51,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -74,9 +75,6 @@
     <Compile Include="SettingsRequisites.cs" />
     <Compile Include="SongsFIleSynchronizer.cs" />
     <Compile Include="UiSynchronizer.cs" />
-    <Compile Include="Views\DirExplorerPage.xaml.cs">
-      <DependentUpon>DirExplorerPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\MusicLoaderPage.xaml.cs">
       <DependentUpon>MusicLoaderPage.xaml</DependentUpon>
     </Compile>
@@ -90,10 +88,6 @@
     <Page Include="Views\InitWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DirExplorerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MusicLoaderPage.xaml">
       <Generator>MSBuild:Compile</Generator>

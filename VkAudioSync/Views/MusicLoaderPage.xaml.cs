@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace VkAudioSync.Views
@@ -15,6 +15,15 @@ namespace VkAudioSync.Views
         public MusicLoaderPage()
         {
             InitializeComponent();
+
+            var dir = SettingsManager.Get(SettingsRequisites.Directory);
+            if (string.IsNullOrEmpty(dir))
+            {
+                BtRefresh.IsEnabled = false;
+                return;
+            }
+
+            LbDirectory.Content = dir;
             var pathName = Path.Combine(SettingsManager.Get(SettingsRequisites.Directory), ".playlist");
             var idsDownload = new JsonFileManager().ReadFile<List<VkSongModel>>(pathName);
             LbIdDownloader.Content = $"{idsDownload?.Count ?? 0} файлов";
@@ -81,6 +90,21 @@ namespace VkAudioSync.Views
         private void StopDownloadOnClick(object sender, System.Windows.RoutedEventArgs e)
         {
             MarkerToStopDownload = true;
+        }
+
+        private void BtDirectory_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.SelectedPath = SettingsManager.Get(SettingsRequisites.Directory);
+                var result = dialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    LbDirectory.Content = dialog.SelectedPath;
+                    BtRefresh.IsEnabled = true;
+                    SettingsManager.Set(SettingsRequisites.Directory, dialog.SelectedPath);
+                }
+            }
         }
     }
 }

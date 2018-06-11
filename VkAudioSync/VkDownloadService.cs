@@ -15,7 +15,7 @@ namespace VkAudioSync
 {
     public class VkDownloadService
     {
-        private int BatchSize => 10;
+        private int BatchSize { get; set; } = 10;
         private string Sid => SettingsManager.Get(SettingsRequisites.Sid);
         private string Uid => SettingsManager.Get(SettingsRequisites.Uid);
         private string Directory => SettingsManager.Get(SettingsRequisites.Directory);
@@ -33,16 +33,8 @@ namespace VkAudioSync
                 request.AddParameter("al", 1);
                 request.AddParameter("ids", string.Join(",", batch.Skip(1).Select(i => i.UniqueId)));
 
-                request.AddHeader("origin", "https://vk.com");
-                request.AddHeader("referer", $"https://vk.com/audios{Uid}");
-                request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+                jsonContent = await SendAlAudioRequest(Uid, Sid, request, client);
 
-                request.AddCookie("remixsid", Sid);
-
-                var response = client.Execute(request);
-                var encoding = Encoding.GetEncoding("Windows-1251");
-                var content = encoding.GetString(response.RawBytes);
-                jsonContent = new Regex("\\[\\[.+\\]\\]").Match(content).Value;
                 if (string.IsNullOrEmpty(jsonContent))
                 {
                     trying++;
@@ -76,7 +68,7 @@ namespace VkAudioSync
                         page.ProgressBar.Value = 0;
                         abortSignal = page.MarkerToStopDownload;
                     });
-                    throw new AbortedException("Canceled by user");
+                    throw new AbortedException();
                 }
                 var webClient = new WebClient();
                 var filePath = Path.Combine(Directory, vkSongModel.FileName);
@@ -159,9 +151,19 @@ namespace VkAudioSync
             request.AddParameter("playlist_id", -1);
             if (offset > 0) request.AddParameter("offset", offset);
 
+            var jsonContent = await SendAlAudioRequest(uid, sid, request, client);
+            var data = JsonConvert.DeserializeObject<List<object[]>>(jsonContent)
+                .Select(VkSongModel.FromJson)
+                .ToList();
+            return data;
+        }
+
+        private static async Task<string> SendAlAudioRequest(string uid, string sid, RestRequest request, RestClient client)
+        {
             request.AddHeader("origin", "https://vk.com");
             request.AddHeader("referer", $"https://vk.com/audios{uid}");
-            request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+            request.AddHeader("user-agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
 
             request.AddCookie("remixsid", sid);
 
@@ -169,16 +171,13 @@ namespace VkAudioSync
             var encoding = Encoding.GetEncoding("Windows-1251");
             var content = encoding.GetString(response.RawBytes);
             var jsonContent = new Regex("\\[\\[.+\\]\\]").Match(content).Value;
-            var data = JsonConvert.DeserializeObject<List<object[]>>(jsonContent)
-                .Select(VkSongModel.FromJson)
-                .ToList();
-            return data;
+            return jsonContent;
         }
     }
 
     internal class AbortedException : Exception
     {
-        public AbortedException(string canceledByUser) : base(canceledByUser)
+        public AbortedException() : base("Canceled by user")
         {
         }
     }
