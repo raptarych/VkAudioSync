@@ -29,7 +29,9 @@ namespace VkAudioSync
         [JsonIgnore]
         public bool Unmasked => !Url.Contains("audio_api_unavailable");
         [JsonIgnore]
-        public string FileName => $"{VkArtist} - {VkTitle}.mp3".CleanFileName();
+        public string FileName => (VkArtist.Length + VkTitle.Length > 260) 
+            ? $"{(VkArtist + " - " + VkTitle).Substring(0, 180)}.mp3".CleanFileName() 
+            : $"{VkArtist} - {VkTitle}.mp3".CleanFileName();
 
         public void Unmask(string uid)
         {
