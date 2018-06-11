@@ -19,6 +19,8 @@
         <Label Name="LbToDownload" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,115,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
 
         <Label Content="Аудиозаписей к удалению" HorizontalAlignment="Left" Margin="5,145,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="UID" HorizontalAlignment="Left" Margin="4,175,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <TextBox Name="TbUid" HorizontalAlignment="Right" Height="23" Margin="4,175,8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160" TextChanged="TbUid_TextChanged"/>
         <Label Name="LbToDelete" Content="0 файлов" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,145,104,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         <Button Content="Начать синхронизацию" HorizontalAlignment="Left" Margin="10,0,0,56" VerticalAlignment="Bottom" Width="214" Height="49" Click="StartDownloadOnClick"/>
         <Button Content="Остановить синхронизацию" HorizontalAlignment="Right" Margin="0,0,10,56" VerticalAlignment="Bottom" Width="214" Height="49" Click="StopDownloadOnClick"/>

@@ -72,6 +72,7 @@ namespace VkAudioSync
                     {
                         SettingsManager.Set(SettingsRequisites.Sid, cookie["remixsid"]);
                         SettingsManager.Set(SettingsRequisites.Uid, Uid);
+                        SettingsManager.Set(SettingsRequisites.DownloadForUid, Uid);
 
                         RunSyncWithUi(o =>
                         {

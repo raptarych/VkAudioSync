@@ -17,6 +17,12 @@ namespace VkAudioSync.Views
             InitializeComponent();
 
             var dir = SettingsManager.Get(SettingsRequisites.Directory);
+            TbUid.Text = SettingsManager.Get(SettingsRequisites.DownloadForUid);
+            if (string.IsNullOrEmpty(TbUid.Text))
+            {
+                TbUid.Text = SettingsManager.Get(SettingsRequisites.Uid);
+                SettingsManager.Set(SettingsRequisites.DownloadForUid, TbUid.Text);
+            }
             if (string.IsNullOrEmpty(dir))
             {
                 BtRefresh.IsEnabled = false;
@@ -51,7 +57,7 @@ namespace VkAudioSync.Views
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var sid = SettingsManager.Get(SettingsRequisites.Sid);
-            var uid = SettingsManager.Get(SettingsRequisites.Uid);
+            var uid = SettingsManager.Get(SettingsRequisites.DownloadForUid);
             LbIdDownloader.Content = "Загрузка...";
             Task.Run(async () =>
             {
@@ -64,6 +70,7 @@ namespace VkAudioSync.Views
                 UiSynchronizer.Run(window =>
                 {
                     LbIdDownloader.Content = $"{audioPlaylist.Count} файлов";
+                    TbUid.Text = SettingsManager.Get(SettingsRequisites.DownloadForUid);
                     SyncLabels();
                 });
             });
@@ -105,6 +112,11 @@ namespace VkAudioSync.Views
                     SettingsManager.Set(SettingsRequisites.Directory, dialog.SelectedPath);
                 }
             }
+        }
+
+        private void TbUid_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SettingsManager.Set(SettingsRequisites.DownloadForUid, TbUid.Text);
         }
     }
 }

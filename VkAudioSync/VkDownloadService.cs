@@ -33,7 +33,7 @@ namespace VkAudioSync
                 request.AddParameter("al", 1);
                 request.AddParameter("ids", string.Join(",", batch.Skip(1).Select(i => i.UniqueId)));
 
-                jsonContent = await SendAlAudioRequest(Uid, Sid, request, client);
+                jsonContent = await SendAlAudioRequest(Sid, request, client);
 
                 if (string.IsNullOrEmpty(jsonContent))
                 {
@@ -151,17 +151,18 @@ namespace VkAudioSync
             request.AddParameter("playlist_id", -1);
             if (offset > 0) request.AddParameter("offset", offset);
 
-            var jsonContent = await SendAlAudioRequest(uid, sid, request, client);
+            var jsonContent = await SendAlAudioRequest(sid, request, client);
             var data = JsonConvert.DeserializeObject<List<object[]>>(jsonContent)
                 .Select(VkSongModel.FromJson)
                 .ToList();
             return data;
         }
 
-        private static async Task<string> SendAlAudioRequest(string uid, string sid, RestRequest request, RestClient client)
+        private static async Task<string> SendAlAudioRequest(string sid, RestRequest request, RestClient client)
         {
+            var ownerUid = SettingsManager.Get(SettingsRequisites.Uid);
             request.AddHeader("origin", "https://vk.com");
-            request.AddHeader("referer", $"https://vk.com/audios{uid}");
+            request.AddHeader("referer", $"https://vk.com/audios{ownerUid}");
             request.AddHeader("user-agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
 
